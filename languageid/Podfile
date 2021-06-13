@@ -1,0 +1,10 @@
+platform :ios, '9.0'
+
+use_frameworks!
+pod 'Firebase/Core'
+pod 'Firebase/MLNLLanguageID'
+
+target 'LanguageIDExample' do
+end
+target 'LanguageIDExampleObjC' do
+end
