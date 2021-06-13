@@ -1,0 +1,35 @@
+# Uncomment the next line to define a global platform for your project
+platform :ios, '8.4'
+
+use_frameworks!
+
+pod 'FirebaseInstanceID', :git => 'https://github.com/firebase/firebase-ios-sdk.git', :branch => 'mm/fis-integration-master'
+pod 'FirebaseInstallations', :git => 'https://github.com/firebase/firebase-ios-sdk.git', :branch => 'mm/fis-integration-master'
+
+target 'InAppMessagingExample' do
+  pod 'Firebase'
+  pod 'Firebase/InAppMessagingDisplay'
+  pod 'Firebase/DynamicLinks'
+
+  target 'InAppMessagingExampleTests' do
+    inherit! :search_paths
+  end
+
+  target 'InAppMessagingExampleUITests' do
+    inherit! :search_paths
+  end
+end
+
+target 'InAppMessagingExampleSwift' do
+  pod 'Firebase'
+  pod 'Firebase/InAppMessagingDisplay'
+  pod 'Firebase/DynamicLinks'
+
+  target 'InAppMessagingExampleSwiftTests' do
+    inherit! :search_paths
+  end
+
+  target 'InAppMessagingExampleSwiftUITests' do
+    inherit! :search_paths
+  end
+end
