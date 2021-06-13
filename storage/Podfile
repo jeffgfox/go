@@ -1,0 +1,20 @@
+# StorageExample
+
+use_frameworks!
+platform :ios, '11.0'
+
+pod 'Firebase/Analytics'
+pod 'Firebase/Auth'
+pod 'Firebase/Storage'
+
+pod 'FirebaseStorage', :git=>'git@github.com:FirebasePrivate/firebase-ios-sdk.git', :branch=>'mm/appcheck-token-api'
+pod 'FirebaseAppCheck', :git=>'git@github.com:FirebasePrivate/firebase-ios-sdk.git', :branch=>'mm/appcheck-token-api'
+pod 'FirebaseCore', :git=>'git@github.com:FirebasePrivate/firebase-ios-sdk.git', :branch=>'mm/appcheck-token-api'
+
+target 'StorageExample' do
+end
+target 'StorageExampleSwift' do
+  pod 'FirebaseStorageSwift', "~> 7.0-beta"
+end
+target 'StorageExampleTests' do
+end
