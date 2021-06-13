@@ -1,0 +1,49 @@
+name: Database
+
+on:
+  push:
+    branches: [ master ]
+    paths:
+      - '.github/workflows/database.yml'
+      - 'database/**'
+      - 'scripts/*'
+      - 'scripts/database.sh'
+  pull_request:
+    branches: [ master ]
+    paths:
+      - '.github/workflows/database.yml'
+      - 'database/**'
+      - 'scripts/*'
+      - 'scripts/database.sh'
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: build
+    runs-on: macOS-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+      - name: Setup
+        run: |
+          cd database
+          gem install bundler
+          bundle install
+          gem install xcpretty
+          bundle exec pod install --repo-update
+          ../scripts/install_prereqs/database.sh
+        env:
+          SAMPLE: Database
+          secrets_passphrase: ${{ secrets.GHASECRETSGPGPASSPHRASE1 }}
+      - name: Build ObjC
+        run: ./scripts/test.sh
+        env:
+          SWIFT_SUFFIX: ''
+          SAMPLE: Database
+      - name: Build Swift
+        run: ./scripts/test.sh
+        env:
+          SWIFT_SUFFIX: 'Swift'
+          SAMPLE: Database

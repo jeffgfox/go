@@ -1,0 +1,44 @@
+name: Authentication
+
+on:
+  push:
+    branches: [ master ]
+    paths:
+      - '.github/workflows/authentication.yml'
+      - 'authentication/**'
+      - 'scripts/*'
+      - 'scripts/authentication.sh'
+  pull_request:
+    branches: [ master ]
+    paths:
+      - '.github/workflows/authentication.yml'
+      - 'authentication/**'
+      - 'scripts/*'
+      - 'scripts/authentication.sh'
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: build
+    runs-on: macOS-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+      - name: Setup
+        run: |
+          cd authentication
+          gem install bundler
+          bundle install
+          gem install xcpretty
+          bundle exec pod install --repo-update
+          ../scripts/install_prereqs/authentication.sh
+        env:
+          SAMPLE: Authentication
+          secrets_passphrase: ${{ secrets.GHASECRETSGPGPASSPHRASE1 }}
+      - name: Build Swift
+        run: ./scripts/test.sh
+        env:
+          SWIFT_SUFFIX: ''
+          SAMPLE: Authentication

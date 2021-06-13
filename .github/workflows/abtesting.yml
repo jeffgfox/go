@@ -1,0 +1,45 @@
+name: A/B Testing
+
+on:
+  push:
+    branches: [ master ]
+    paths:
+      - '.github/workflows/abtesting.yml'
+      - 'abtesting/**'
+      - 'scripts/*'
+      - 'scripts/abtesting.sh'
+  pull_request:
+    branches: [ master ]
+    paths:
+      - '.github/workflows/abtesting.yml'
+      - 'abtesting/**'
+      - 'scripts/*'
+      - 'scripts/abtesting.sh'
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: build
+    runs-on: macOS-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+      - name: Setup
+        run: |
+          cd abtesting
+          gem install bundler
+          bundle install
+          gem install xcpretty
+          bundle exec pod install --repo-update
+          ../scripts/install_prereqs/abtesting.sh
+        env:
+          SAMPLE: ABTesting
+          secrets_passphrase: ${{ secrets.GHASECRETSGPGPASSPHRASE1 }}
+      - name: Build Swift
+        run: |
+          ./scripts/test.sh
+        env:
+          SWIFT_SUFFIX: ''
+          SAMPLE: ABTesting

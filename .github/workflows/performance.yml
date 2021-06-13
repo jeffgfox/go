@@ -1,0 +1,51 @@
+name: Performance
+
+on:
+  push:
+    branches: [ master ]
+    paths:
+      - '.github/workflows/performance.yml'
+      - 'performance/**'
+      - 'scripts/*'
+      - 'scripts/performance.sh'
+  pull_request:
+    branches: [ master ]
+    paths:
+      - '.github/workflows/performance.yml'
+      - 'performance/**'
+      - 'scripts/*'
+      - 'scripts/performance.sh'
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: build
+    runs-on: macOS-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+      - name: Setup
+        run: |
+          cd performance
+          gem install bundler
+          bundle install
+          gem install xcpretty
+          bundle exec pod install --repo-update
+          ../scripts/install_prereqs/performance.sh
+        env:
+          SAMPLE: Performance
+          secrets_passphrase: ${{ secrets.GHASECRETSGPGPASSPHRASE1 }}
+      - name: Build ObjC
+        run: |
+          ./scripts/test.sh
+        env:
+          SWIFT_SUFFIX: ''
+          SAMPLE: Performance
+      - name: Build Swift
+        run: |
+          ./scripts/test.sh
+        env:
+          SWIFT_SUFFIX: 'Swift'
+          SAMPLE: Performance
